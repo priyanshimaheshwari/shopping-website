@@ -3,116 +3,216 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ShoppingCart, Menu, X, LogOut, Home } from "lucide-react"
+import { useToast } from "../context/ToastContext"
+import "../styles/Header.css"
 
 export default function Header({ cartItemCount = 0 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const router = useRouter()
+  const { showToast } = useToast()
 
   const handleLogout = () => {
     localStorage.removeItem("token")
+    localStorage.removeItem("username")
+    showToast("You have been logged out successfully", "info")
     router.push("/login")
   }
 
   return (
-    <header className="bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/products" className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold text-emerald-600">ShopEase</span>
-            </Link>
-          </div>
+    <header className="header">
+      <div className="header-container">
+        <Link href="/products" className="logo">
+          ShopEase
+        </Link>
 
-          <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
-            <Link
-              href="/products"
-              className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium flex items-center"
+        <nav className="nav-desktop">
+          <Link href="/products" className="nav-item">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="nav-icon"
             >
-              <Home className="h-5 w-5 mr-1" />
-              Home
-            </Link>
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Home
+          </Link>
 
-            <Link
-              href="/cart"
-              className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium flex items-center"
+          <Link href="/cart" className="nav-item">
+            <div className="cart-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="nav-icon"
+              >
+                <circle cx="8" cy="21" r="1"></circle>
+                <circle cx="19" cy="21" r="1"></circle>
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+              </svg>
+              {cartItemCount > 0 && <span className="cart-count">{cartItemCount}</span>}
+            </div>
+            Cart
+          </Link>
+
+          <button onClick={handleLogout} className="nav-item">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="nav-icon"
             >
-              <div className="relative">
-                <ShoppingCart className="h-5 w-5 mr-1" />
-                {cartItemCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-emerald-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                    {cartItemCount}
-                  </span>
-                )}
-              </div>
-              Cart
-            </Link>
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </button>
+        </nav>
 
-            <button
-              onClick={handleLogout}
-              className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium flex items-center"
+        <div className="mobile-nav">
+          <Link href="/cart" className="mobile-cart">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="nav-icon"
             >
-              <LogOut className="h-5 w-5 mr-1" />
-              Logout
-            </button>
-          </div>
+              <circle cx="8" cy="21" r="1"></circle>
+              <circle cx="19" cy="21" r="1"></circle>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+            </svg>
+            {cartItemCount > 0 && <span className="cart-count">{cartItemCount}</span>}
+          </Link>
 
-          <div className="flex items-center sm:hidden">
-            <Link href="/cart" className="text-gray-500 hover:text-gray-900 px-3 py-2 relative">
-              <ShoppingCart className="h-6 w-6" />
-              {cartItemCount > 0 && (
-                <span className="absolute top-0 right-0 bg-emerald-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                  {cartItemCount}
-                </span>
-              )}
-            </Link>
-
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500"
-            >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="mobile-menu-button">
+            {isMenuOpen ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="4" y1="12" x2="20" y2="12"></line>
+                <line x1="4" y1="6" x2="20" y2="6"></line>
+                <line x1="4" y1="18" x2="20" y2="18"></line>
+              </svg>
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="sm:hidden">
-          <div className="pt-2 pb-3 space-y-1">
-            <Link
-              href="/products"
-              className="text-gray-500 hover:text-gray-900 block px-3 py-2 text-base font-medium border-l-4 border-transparent hover:border-emerald-500"
-            >
-              <div className="flex items-center">
-                <Home className="h-5 w-5 mr-2" />
-                Home
-              </div>
-            </Link>
+      <div className={`mobile-menu ${isMenuOpen ? "open" : ""}`}>
+        <Link href="/products" className="mobile-nav-item" onClick={() => setIsMenuOpen(false)}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="nav-icon"
+          >
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Home
+        </Link>
 
-            <Link
-              href="/cart"
-              className="text-gray-500 hover:text-gray-900 block px-3 py-2 text-base font-medium border-l-4 border-transparent hover:border-emerald-500"
-            >
-              <div className="flex items-center">
-                <ShoppingCart className="h-5 w-5 mr-2" />
-                Cart
-              </div>
-            </Link>
+        <Link href="/cart" className="mobile-nav-item" onClick={() => setIsMenuOpen(false)}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="nav-icon"
+          >
+            <circle cx="8" cy="21" r="1"></circle>
+            <circle cx="19" cy="21" r="1"></circle>
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+          </svg>
+          Cart
+        </Link>
 
-            <button
-              onClick={handleLogout}
-              className="text-gray-500 hover:text-gray-900 block px-3 py-2 text-base font-medium border-l-4 border-transparent hover:border-emerald-500 w-full text-left"
-            >
-              <div className="flex items-center">
-                <LogOut className="h-5 w-5 mr-2" />
-                Logout
-              </div>
-            </button>
-          </div>
-        </div>
-      )}
+        <button
+          onClick={() => {
+            handleLogout()
+            setIsMenuOpen(false)
+          }}
+          className="mobile-nav-item"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="nav-icon"
+          >
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          Logout
+        </button>
+      </div>
     </header>
   )
 }

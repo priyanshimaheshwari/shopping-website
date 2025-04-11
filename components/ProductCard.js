@@ -1,60 +1,80 @@
 "use client"
 
-import Image from "next/image"
+import { useState } from "react"
 import Link from "next/link"
-import { Star, ShoppingCart } from "lucide-react"
-import { useCart } from "@/context/CartContext"
+import { useCart } from "../context/CartContext"
+import { useToast } from "../context/ToastContext"
+import "../styles/ProductCard.css"
 
 export default function ProductCard({ product }) {
+  const [imageLoaded, setImageLoaded] = useState(false)
   const { addToCart } = useCart()
+  const { showToast } = useToast()
 
   const handleAddToCart = (e) => {
     e.preventDefault()
     e.stopPropagation()
     addToCart(product)
+    showToast(`${product.title} added to cart!`, "success")
   }
 
   return (
     <Link href={`/products/${product.id}`}>
-      <div className="group relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
-        <div className="aspect-w-1 aspect-h-1 bg-gray-200 relative h-48 flex items-center justify-center p-4">
-          <Image
-            src={product.image}
+      <div className="product-card">
+        <div className="product-image-container">
+          {!imageLoaded && <div className="spinner"></div>}
+          <img
+            src={product.image || "/placeholder.svg"}
             alt={product.title}
-            layout="fill"
-            style={{ objectFit: "cover" }} 
-            className="p-4 group-hover:scale-105 transition-transform duration-300"
+            className="product-image"
+            style={{ display: imageLoaded ? "block" : "none" }}
+            onLoad={() => setImageLoaded(true)}
           />
         </div>
 
-        <div className="flex-1 p-4 flex flex-col">
-          <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">{product.title}</h3>
+        <div className="product-content">
+          <div className="product-category">{product.category}</div>
+          <h3 className="product-title">{product.title}</h3>
 
-          <div className="flex items-center mb-2">
-            <div className="flex items-center">
+          <div className="product-rating">
+            <div className="stars">
               {[...Array(5)].map((_, i) => (
-                <Star
+                <svg
                   key={i}
-                  className={`h-4 w-4 ${
-                    i < Math.round(product.rating.rate) ? "text-yellow-400 fill-current" : "text-gray-300"
-                  }`}
-                />
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill={i < Math.round(product.rating.rate) ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  className={`star ${i < Math.round(product.rating.rate) ? "star-filled" : "star-empty"}`}
+                >
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
               ))}
             </div>
-            <span className="ml-1 text-xs text-gray-500">({product.rating.count})</span>
+            <span className="rating-count">({product.rating.count})</span>
           </div>
 
-          <p className="text-gray-500 text-sm line-clamp-2 mb-4 flex-grow">{product.description}</p>
+          <p className="product-description">{product.description}</p>
 
-          <div className="flex items-center justify-between mt-auto">
-            <span className="text-lg font-bold text-gray-900">${product.price.toFixed(2)}</span>
+          <div className="product-footer">
+            <span className="product-price">${product.price.toFixed(2)}</span>
 
-            <button
-              onClick={handleAddToCart}
-              className="p-2 bg-emerald-100 rounded-full text-emerald-600 hover:bg-emerald-600 hover:text-white transition-colors duration-300"
-              aria-label="Add to cart"
-            >
-              <ShoppingCart className="h-5 w-5" />
+            <button onClick={handleAddToCart} className="add-to-cart-button" aria-label="Add to cart">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="8" cy="21" r="1"></circle>
+                <circle cx="19" cy="21" r="1"></circle>
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+              </svg>
             </button>
           </div>
         </div>

@@ -1,20 +1,18 @@
-// app/layout.js (or layout.tsx if you're using TypeScript)
-import { Inter } from "next/font/google"
-import "./globals.css"
-import { CartProvider } from "@/context/CartContext"
-
-const inter = Inter({ subsets: ["latin"] })
-
-export const metadata = {
-  title: "Your Site",
-  description: "Description here",
-}
+import { CartProvider } from "../context/CartContext"
+import { ToastProvider } from "../context/ToastContext"
+import "../styles/globals.css"
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en">
+      <head>
+        <title>ShopEase - Online Shopping</title>
+        <meta name="description" content="Shop the latest products with ShopEase" />
+      </head>
       <body>
-        <CartProvider>{children}</CartProvider>
+        <ToastProvider>
+          <CartProvider>{children}</CartProvider>
+        </ToastProvider>
       </body>
     </html>
   )

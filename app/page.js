@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
+import "../styles/Home.css"
 
 export default function Home() {
   const router = useRouter()
@@ -17,9 +18,10 @@ export default function Home() {
   }, [router])
 
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold">Loading...</h1>
+    <main className="home-container">
+      <div className="loading-content">
+        <h1 className="loading-title">Loading...</h1>
+        <div className="spinner"></div>
       </div>
     </main>
   )
