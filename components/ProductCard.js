@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useCart } from "../context/CartContext"
+import Image from "next/image"
 import { useToast } from "../context/ToastContext"
 import "../styles/ProductCard.css"
 
@@ -23,12 +24,14 @@ export default function ProductCard({ product }) {
       <div className="product-card">
         <div className="product-image-container">
           {!imageLoaded && <div className="spinner"></div>}
-          <img
-            src={product.image || "/placeholder.svg"}
+          <Image
+            src={product.image}
             alt={product.title}
             className="product-image"
             style={{ display: imageLoaded ? "block" : "none" }}
-            onLoad={() => setImageLoaded(true)}
+            onLoadingComplete={() => setImageLoaded(true)}
+            width={100} // Adjust width as needed
+            height={100} // Adjust height as needed
           />
         </div>
 

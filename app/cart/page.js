@@ -6,6 +6,7 @@ import Header from "../../components/Header"
 import { useCart } from "../../context/CartContext"
 import { useToast } from "../../context/ToastContext"
 import "../../styles/Cart.css"
+import Image from "next/image"
 
 export default function Cart() {
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -96,7 +97,7 @@ export default function Cart() {
               </svg>
             </div>
             <h2 className="empty-cart-title">Your cart is empty</h2>
-            <p className="empty-cart-text">Looks like you have not added any products to your cart yet.</p>
+            <p className="empty-cart-text">Looks like you have added any products to your cart yet.</p>
             <button onClick={() => router.push("/products")} className="continue-shopping-button">
               Continue Shopping
             </button>
@@ -107,7 +108,15 @@ export default function Cart() {
               {cartItems.map((item) => (
                 <li key={item.id} className="cart-item">
                   <div className="cart-item-image-container">
-                    <img src={item.image || "/placeholder.svg"} alt={item.title} className="cart-item-image" />
+                  <Image
+  src={item?.image ?? "/placeholder.svg"}
+  alt={item?.title ?? "Product image"}
+  width={100} // or any appropriate size
+  height={100}
+  className="cart-item-image"
+  objectFit="contain"
+/>
+
                   </div>
 
                   <div className="cart-item-details">

@@ -54,6 +54,7 @@
     margin-bottom: 0.25rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     min-height: 3rem;
@@ -119,6 +120,7 @@
     border-radius: 9999px;
     padding: 0.5rem;
     transition: background-color 0.3s, color 0.3s;
+    height: 40px;
   }
   
   .add-to-cart-button:hover {

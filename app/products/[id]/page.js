@@ -1,14 +1,14 @@
 "use client"
 
+import { useParams, useRouter } from "next/navigation" // 👈 add useParams
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
 import Header from "../../../components/Header"
 import { useCart } from "../../../context/CartContext"
 import { useToast } from "../../../context/ToastContext"
 import "../../../styles/ProductDetail.css"
 
-export default function ProductDetail({ params }) {
-  const { id } = params
+export default function ProductDetail() {
+  const { id } = useParams() // 👈 get id here
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -16,6 +16,7 @@ export default function ProductDetail({ params }) {
   const router = useRouter()
   const { addToCart, cartItems } = useCart()
   const { showToast } = useToast()
+
 
   useEffect(() => {
     // Check if user is logged in
@@ -171,23 +172,7 @@ export default function ProductDetail({ params }) {
                   Add to Cart
                 </button>
 
-                <button className="wishlist-button">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="wishlist-icon"
-                  >
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                  </svg>
-                  Add to Wishlist
-                </button>
+                
               </div>
             </div>
           </div>
